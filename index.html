@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Atividade 1</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css&quot;" 
+        rel="stylesheet" 
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
+        crossorigin="anonymous">
+    </head>
+    <body>
+
+        <label>Email:</label>
+        <input type="text" name="email" id="inputEmail"/><br/>
+        <label>Senha</label>
+        <input type="password" name="senha" id="inputSenha"/>
+        
+        <button onclick="consultar()">Consultar</button>
+        <div id="conteudo"></div>
+                
+        
+        <table class="table table-success table-striped">
+            <tbody>
+
+                <tr>
+                    <th scope="row">id</th>
+                    <td id="id"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Nome</th>
+                    <td id="nome"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Email</th>
+                    <td id="email"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Senha</th>
+                    <td id="senha"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Nível</th>
+                    <td id="nivel"></td>
+                </tr>
+                <tr id="hiddenSenha">
+                    <th scope="row">Data</th>
+                    <td id="data"></td>
+                </tr>
+                <tr id="hiddenMensage" hidden="true">
+                    <th scope="row">Mensagem</th>
+                    <td id="mensage"></td>
+                </tr>
+            </tbody>
+        </table>
+    
+        <script type="application/javascript">
+            var id = document.getElementById('id');
+            var nome = document.getElementById('nome');
+            var email = document.getElementById('email');
+            var senha = document.getElementById('senha');
+            var nivel = document.getElementById('nivel');
+            var data = document.getElementById('data');
+            var mensage = document.getElementById('mensage');
+            var hiddenSenha = document.getElementById('hiddenSenha');
+            
+            var hiddenMensagem = document.getElementById('hiddenMensagem');
+
+            var inputEmail = document.getElementById('inputEmail');
+            var inputSenha = document.getElementById('inputSenha');
+
+            
+            // manipular o conteúdo da div
+            var elConteudo = document.getElementById('conteudo');
+
+            function consultar(){
+                var getEmail = inputEmail.value;
+                var getSenha = inputSenha.value;
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET','https://www.barth.com.br/project2MJA/usuarios/verificarUsuario.php?email='+getEmail+'&senha='+getSenha+'');
+                xhr.send(null);
+                xhr.onreadystatechange = function(){
+                    if(xhr.readyState === 4){
+                        var res = JSON.parse(xhr.responseText);
+
+                        id.innerHTML = res.id;
+                        nome.innerHTML = res.nome;
+                        email.innerHTML = res.email;
+                        senha.innerHTML = res.senha;
+                        nivel.innerHTML = res.nivel;
+                        data.innerHTML = res.data;
+
+
+                        if (!res.mensage) {
+                            hiddenSenha.hidden = false; 
+                            senha.innerText = res.senha;
+                        }
+
+                        if (res.mensage) {
+                            hiddenSenha.hidden = true;
+                            hiddenMensagem.hidden = false; 
+                            mensage.innerText = res.mensage;
+                        } else {
+                            alert('Login ok!');
+                            window.location.href = "./redirecionar.html";
+                        }
+                    }
+                };
+            }
+        </script>
+    </body>
+</html>
